@@ -11,8 +11,15 @@
             "role": "Developer"
         }
     ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/codin/http-client"
+        }
+    ],
     "require": {
-        "php": ">=7.4|>=8.0"
+        "php": ">=7.4|>=8.0",
+        "codin/http-client": "dev-master"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "@stable",
@@ -36,7 +43,7 @@
         ],
         "test": [
             "phpstan analyse --no-progress --no-ansi --configuration=phpstan.neon",
-            "phpspec run --no-coverage --no-ansi --no-interaction --format=dot"
+            "phpspec run --no-ansi --no-interaction"
         ],
         "uninstall": [
             "rm -rf ./bin",
