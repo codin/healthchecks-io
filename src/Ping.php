@@ -19,9 +19,9 @@ class Ping
 
     protected RequestBuilder $requestBuilder;
 
-    public function __construct(
-        string $uuid,
-        string $url = 'https://hc-ping.com/',
+    final public function __construct(
+        string $uuid = 'none',
+        string $url = 'https://hc-ping.com',
         ?RequestBuilder $requestBuilder = null,
         ?ClientInterface $httpClient = null
     ) {
@@ -32,9 +32,19 @@ class Ping
         $this->httpClient = $httpClient ?? new HttpClient($factory, $factory);
     }
 
+    public function withUuid(string $uuid): self
+    {
+        return new self($uuid, $this->url, $this->requestBuilder, $this->httpClient);
+    }
+
     protected function ping(string $action = ''): bool
     {
-        $request = $this->requestBuilder->build('get', sprintf('%s/%s/', $this->url, $action));
+        $request = $this->requestBuilder->build(
+            'get',
+            $action ?
+            sprintf('%s/%s/%s', $this->url, $this->uuid, $action) :
+            sprintf('%s/%s', $this->url, $this->uuid)
+        );
 
         $this->handleRequest($request);
 
@@ -52,9 +62,9 @@ class Ping
     /**
      * Send fail
      */
-    public function fail(): bool
+    public function fail(int $exitCode = 0): bool
     {
-        return $this->ping('fail');
+        return $this->ping($exitCode > 0 ? (string) $exitCode : 'fail');
     }
 
     /**

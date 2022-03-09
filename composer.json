@@ -11,15 +11,9 @@
             "role": "Developer"
         }
     ],
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/codin/http-client"
-        }
-    ],
     "require": {
         "php": ">=7.4|>=8.0",
-        "codin/http-client": "dev-master"
+        "codin/http-client": "^0.1"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "@stable",

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Codin\Healthchecks\Exceptions;
 
-use ErrorException;
+use Exception;
 
-class FailureError extends ErrorException
+class FailureError extends Exception
 {
 }
