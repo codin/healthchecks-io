@@ -15,26 +15,29 @@ class Ping
 
     protected string $uuid;
 
-    protected string $url;
+    protected string $url = 'https://hc-ping.com';
 
     protected RequestBuilder $requestBuilder;
 
     final public function __construct(
-        string $uuid = 'none',
-        string $url = 'https://hc-ping.com',
-        ?RequestBuilder $requestBuilder = null,
-        ?ClientInterface $httpClient = null
+        string $uuid,
+        ?ClientInterface $httpClient = null,
+        ?RequestBuilder $requestBuilder = null
     ) {
         $this->uuid = $uuid;
-        $this->url = $url;
         $factory = new Psr17Factory();
-        $this->requestBuilder = $requestBuilder ?? new RequestBuilder($factory, $factory);
         $this->httpClient = $httpClient ?? new HttpClient($factory, $factory);
+        $this->requestBuilder = $requestBuilder ?? new RequestBuilder($factory, $factory);
     }
 
     public function withUuid(string $uuid): self
     {
-        return new self($uuid, $this->url, $this->requestBuilder, $this->httpClient);
+        return new self($uuid, $this->httpClient, $this->requestBuilder);
+    }
+
+    public function withHttpClient(ClientInterface $httpClient): self
+    {
+        return new self($this->uuid, $httpClient, $this->requestBuilder);
     }
 
     protected function ping(string $action = ''): bool
