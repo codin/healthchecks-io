@@ -18,27 +18,34 @@ class PingSpec extends ObjectBehavior
     public function it_should_perform_start(ClientInterface $httpClient, ResponseInterface $response)
     {
         $httpClient->sendRequest(new TypeToken(RequestInterface::class))->shouldBeCalled()->willReturn($response);
-        $this->beConstructedWith('none', 'https://foo.dev', null, $httpClient);
+        $this->beConstructedWith('none', 'https://foo.dev', $httpClient);
         $this->start();
     }
 
     public function it_should_perform_success(ClientInterface $httpClient, ResponseInterface $response)
     {
         $httpClient->sendRequest(new TypeToken(RequestInterface::class))->shouldBeCalled()->willReturn($response);
-        $this->beConstructedWith('none', 'https://foo.dev', null, $httpClient);
+        $this->beConstructedWith('none', 'https://foo.dev', $httpClient);
         $this->success();
     }
 
     public function it_should_perform_fail(ClientInterface $httpClient, ResponseInterface $response)
     {
         $httpClient->sendRequest(new TypeToken(RequestInterface::class))->shouldBeCalled()->willReturn($response);
-        $this->beConstructedWith('none', 'https://foo.dev', null, $httpClient);
+        $this->beConstructedWith('none', 'https://foo.dev', $httpClient);
         $this->fail();
     }
 
-    public function it_should_change_uuid(ClientInterface $httpClient, ResponseInterface $response)
+    public function it_should_change_uuid()
     {
+        $this->beConstructedWith('none', 'https://foo.dev');
         $this->withUuid('test')->shouldReturnAnInstanceOf(Ping::class);
+    }
+
+    public function it_should_change_http_client(ClientInterface $httpClient)
+    {
+        $this->beConstructedWith('none', 'https://foo.dev');
+        $this->withHttpClient($httpClient)->shouldReturnAnInstanceOf(Ping::class);
     }
 
     public function it_should_handle_HTTP_BAD_REQUEST(ClientInterface $httpClient, ResponseInterface $response, ClientExceptionInterface $error)
@@ -58,7 +65,7 @@ class PingSpec extends ObjectBehavior
             })
         ;
         $response->getStatusCode()->shouldBeCalled()->willReturn(400);
-        $this->beConstructedWith('none', 'https://foo.dev', null, $httpClient);
+        $this->beConstructedWith('none', 'https://foo.dev', $httpClient);
         $this->shouldThrow(Exceptions\InvalidPayloadError::class)->duringStart();
     }
 
@@ -79,7 +86,7 @@ class PingSpec extends ObjectBehavior
             })
         ;
         $response->getStatusCode()->shouldBeCalled()->willReturn(401);
-        $this->beConstructedWith('none', 'https://foo.dev', null, $httpClient);
+        $this->beConstructedWith('none', 'https://foo.dev', $httpClient);
         $this->shouldThrow(Exceptions\UnauthorisedError::class)->duringStart();
     }
 
@@ -100,7 +107,7 @@ class PingSpec extends ObjectBehavior
             })
         ;
         $response->getStatusCode()->shouldBeCalled()->willReturn(403);
-        $this->beConstructedWith('none', 'https://foo.dev', null, $httpClient);
+        $this->beConstructedWith('none', 'https://foo.dev', $httpClient);
         $this->shouldThrow(Exceptions\AccountLimitReached::class)->duringStart();
     }
 
@@ -121,7 +128,7 @@ class PingSpec extends ObjectBehavior
             })
         ;
         $response->getStatusCode()->shouldBeCalled()->willReturn(404);
-        $this->beConstructedWith('none', 'https://foo.dev', null, $httpClient);
+        $this->beConstructedWith('none', 'https://foo.dev', $httpClient);
         $this->shouldThrow(Exceptions\UuidNotFound::class)->duringStart();
     }
 
@@ -142,7 +149,7 @@ class PingSpec extends ObjectBehavior
             })
         ;
         $response->getStatusCode()->shouldBeCalled()->willReturn(500);
-        $this->beConstructedWith('none', 'https://foo.dev', null, $httpClient);
+        $this->beConstructedWith('none', 'https://foo.dev', $httpClient);
         $this->shouldThrow(Exceptions\FailureError::class)->duringStart();
     }
 
@@ -152,7 +159,7 @@ class PingSpec extends ObjectBehavior
             ->willThrow(new class('test') extends \Exception implements ClientExceptionInterface {
             })
         ;
-        $this->beConstructedWith('none', 'https://foo.dev', null, $httpClient);
+        $this->beConstructedWith('none', 'https://foo.dev', $httpClient);
         $this->shouldThrow(Exceptions\FailureError::class)->duringStart();
     }
 }
