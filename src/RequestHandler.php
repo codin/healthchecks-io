@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Codin\Healthchecks;
 
-use Codin\HttpClient\Exceptions\ClientError;
-use Codin\HttpClient\Exceptions\ServerError;
+use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -18,7 +17,11 @@ trait RequestHandler
     {
         try {
             $response = $this->httpClient->sendRequest($request);
-        } catch (ClientError | ServerError $e) {
+        } catch (ClientExceptionInterface $e) {
+            if (!method_exists($e, 'getResponse')) {
+                throw new Exceptions\FailureError($e->getMessage(), $e->getCode(), $e);
+            }
+
             $response = $e->getResponse();
 
             if ($response->getStatusCode() === Constants::HTTP_BAD_REQUEST) {

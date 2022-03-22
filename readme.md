@@ -1,5 +1,9 @@
 # Healthchecks-io Client
 
+![version](https://img.shields.io/github/v/tag/codin/healthchecks-io)
+![workflow](https://img.shields.io/github/workflow/status/codin/healthchecks-io/Composer)
+![license](https://img.shields.io/github/license/codin/healthchecks-io)
+
 Usage
 
 ```php
